@@ -92,10 +92,10 @@ class Room(models.Model):
             except Presence.DoesNotExist:
                 return
 
+        presence.delete()
         async_to_sync(channel_layer.group_discard)(
             self.channel_name, presence.channel_name
         )
-        presence.delete()
         self.broadcast_changed(removed=presence)
 
     def prune_presences(self, age_in_seconds=None):
